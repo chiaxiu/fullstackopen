@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const hi = "hi";
+
 let notes = [
   {
     id: 1,
