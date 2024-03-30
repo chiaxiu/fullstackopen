@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import personService from "./services/persons";
 import "./index.css";
@@ -129,13 +130,22 @@ const App = () => {
         id: JSON.stringify(persons.length + 1),
       };
 
-      personService.create(nameObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setMessage(`Added ${nameObject.name}`);
-        setTimeout(() => {
-          setMessage(null);
-        }, 2000);
-      });
+      personService
+        .create(nameObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setMessage(`Added ${nameObject.name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 2000);
+        })
+        .catch((error) => {
+          console.log(error.response.data.error);
+          setMessage(`ERROR ${error.response.data.error}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 2000);
+        });
     }
 
     setNewName("");
