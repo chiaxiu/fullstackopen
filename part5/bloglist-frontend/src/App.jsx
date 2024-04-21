@@ -23,6 +23,11 @@ const App = () => {
     }
   }, []);
 
+  const updateBlogs = async () => {
+    const updatedBlogs = await blogService.getAll();
+    setBlogs(updatedBlogs);
+  };
+
   const handleLogoutButton = () => {
     window.localStorage.removeItem("loggedBlogappUser");
     window.location.reload();
@@ -39,12 +44,17 @@ const App = () => {
           <p>{user.name} logged-in </p>
           <button onClick={handleLogoutButton}>logout</button>
           <Togglable>
-            <CreateBlog setMessage={setMessage} />
+            <CreateBlog setMessage={setMessage} updateBlogs={updateBlogs} />
           </Togglable>
           {blogs
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
-              <Blog key={blog.id} blog={blog} user={user} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                user={user}
+                updateBlogs={updateBlogs}
+              />
             ))}
         </div>
       )}

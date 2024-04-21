@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const CreateBlog = ({ setMessage }) => {
+const CreateBlog = ({ setMessage, updateBlogs }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -11,6 +11,7 @@ const CreateBlog = ({ setMessage }) => {
     try {
       await blogService.create({ title: title, author: author, url: url });
       setMessage(`a new blog ${title} by ${author} is added!`);
+      updateBlogs();
       setTitle("");
       setAuthor("");
       setUrl("");
@@ -33,6 +34,7 @@ const CreateBlog = ({ setMessage }) => {
         <div>
           Title:&nbsp;
           <input
+            data-testid="title"
             type="text"
             value={title}
             name="title"
@@ -42,6 +44,7 @@ const CreateBlog = ({ setMessage }) => {
         <div>
           Author:&nbsp;
           <input
+            data-testid="author"
             type="text"
             value={author}
             name="author"
@@ -51,6 +54,7 @@ const CreateBlog = ({ setMessage }) => {
         <div>
           URL:&nbsp;
           <input
+            data-testid="url"
             type="text"
             value={url}
             name="url"

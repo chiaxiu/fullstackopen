@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, updateBlogs }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -21,7 +21,7 @@ const Blog = ({ blog, user }) => {
         user: blog.user.id,
       };
       await blogService.put(updatedObject);
-      location.reload();
+      updateBlogs();
     } catch (exception) {
       console.log(exception);
     }
@@ -32,7 +32,7 @@ const Blog = ({ blog, user }) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       try {
         await blogService.remove(blog.id);
-        location.reload();
+        updateBlogs();
       } catch (exception) {
         console.log(exception);
       }
@@ -41,17 +41,20 @@ const Blog = ({ blog, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div>
+      <div data-testid="blog-title">
         {blog.title}{" "}
         <button onClick={() => setFullInfo(!fullInfo)}>
           {fullInfo ? "hide" : "view"}
         </button>
       </div>
       {fullInfo && (
-        <div>
+        <div data-testid="blog-contents">
           <p>{blog.url}</p>
           <p>
-            likes {blog.likes} <button onClick={handleLikeButton}>like</button>
+            likes {blog.likes}{" "}
+            <button onClick={handleLikeButton} data-testid="like-button">
+              like
+            </button>
           </p>
           <p>{blog.author}</p>
           {user.username === blog.user.username && (
