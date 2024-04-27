@@ -19,4 +19,4 @@ Hi, this is my GitHub repository for documenting and submitting my work for the 
 - Part 3: Programming a server with NodeJS and Express
 - Part 4: Testing Express servers, user administration
 - Part 5: Testing React apps
-- Part 6: Advanced state management
+- Part 6: Advanced State Management
