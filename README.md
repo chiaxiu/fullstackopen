@@ -4,12 +4,12 @@ Hi, this is my GitHub repository for documenting and submitting my work for the 
 
 ### Skills learned so far
 
-- Frontend: React.js, Vite.js
+- Frontend: React.js, Vite.js, React Router, Bootstrap
 - Backend: Node.js, Express.js
 - Testing: Vitest, Jest, Playwright, Cypress
 - State Management: Redux, Context, React Query
 - Database: MongoDB
-- Others: Docker, ESLint, Fly.io, JWT
+- Others: Docker, ESLint, Fly.io, JWT, Webpack
 
 ### Content covered for each part
 
@@ -20,3 +20,4 @@ Hi, this is my GitHub repository for documenting and submitting my work for the 
 - Part 4: Testing Express servers, user administration
 - Part 5: Testing React apps
 - Part 6: Advanced State Management
+- Part 7: React router, custom hooks, styling app with CSS and webpack
