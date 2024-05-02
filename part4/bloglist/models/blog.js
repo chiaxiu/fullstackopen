@@ -14,6 +14,10 @@ const blogSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  comments: {
+    type: [String],
+    default: [],
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -21,7 +25,7 @@ const blogSchema = new mongoose.Schema({
 });
 
 blogSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
+  transform: (_document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;

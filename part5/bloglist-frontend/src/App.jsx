@@ -1,62 +1,102 @@
-import { useState, useEffect } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
+import { useEffect, useState } from "react";
 import Notification from "./components/Notification";
 import CreateBlog from "./components/CreateBlog";
 import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
 
+import { useDispatch, useSelector } from "react-redux";
+import { initializeBlogs } from "./reducers/blogReducer";
+import { initializeUser, logoutUser } from "./reducers/userReducer";
+
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Users from "./components/Users";
+import userService from "./services/users";
+import IndivUser from "./components/IndivUser";
+import IndivBlog from "./components/IndivBlog";
+import Blogs from "./components/Blogs";
+import { Nav, Navbar } from "react-bootstrap";
+
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
-  const [message, setMessage] = useState(null);
+  const dispatch = useDispatch();
+  const { user, blogs } = useSelector((state) => state);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+    dispatch(initializeUser());
+  }, [dispatch]);
+
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-    }
-  }, []);
+    const getAllUsers = async () => {
+      const users = await userService.getAll();
+      setUsers(users);
+    };
 
-  const updateBlogs = async () => {
-    const updatedBlogs = await blogService.getAll();
-    setBlogs(updatedBlogs);
-  };
+    getAllUsers();
+  }, []);
 
   const handleLogoutButton = () => {
-    window.localStorage.removeItem("loggedBlogappUser");
-    window.location.reload();
+    dispatch(logoutUser());
   };
+
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
 
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} />
+      <Notification />
+
       {user === null ? (
-        <LoginForm setMessage={setMessage} setUser={setUser} />
+        <LoginForm />
       ) : (
-        <div>
-          <p>{user.name} logged-in </p>
-          <button onClick={handleLogoutButton}>logout</button>
-          <Togglable>
-            <CreateBlog setMessage={setMessage} updateBlogs={updateBlogs} />
-          </Togglable>
-          {blogs
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                user={user}
-                updateBlogs={updateBlogs}
-              />
-            ))}
-        </div>
+        <Router>
+          <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="#" as="span">
+                  <Link style={{ padding: 5 }} to="/">
+                    home
+                  </Link>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  <Link style={{ padding: 5 }} to="/blogs">
+                    blogs
+                  </Link>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  <Link style={{ padding: 5 }} to="/users">
+                    users
+                  </Link>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  <p>{user.name} logged-in </p>
+                </Nav.Link>
+                <Nav.Link href="#" as="span">
+                  <button onClick={handleLogoutButton}>logout</button>
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+
+          <div>
+            <Togglable>
+              <CreateBlog />
+            </Togglable>
+          </div>
+
+          <Routes>
+            <Route path="/" element={<Blogs blogs={sortedBlogs} />} />
+            <Route path="/blogs" element={<Blogs blogs={sortedBlogs} />} />
+            <Route
+              path="/blogs/:id"
+              element={<IndivBlog blogs={blogs} user={user} />}
+            />
+            <Route path="/users" element={<Users users={users} />} />
+            <Route path="/users/:id" element={<IndivUser users={users} />} />
+          </Routes>
+        </Router>
       )}
     </div>
   );

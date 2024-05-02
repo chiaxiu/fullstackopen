@@ -1,7 +1,10 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
+import { useDispatch } from "react-redux";
+import { setNotification } from "../reducers/notificationReducer";
+import { createBlog } from "../reducers/blogReducer";
 
-const CreateBlog = ({ setMessage, updateBlogs }) => {
+const CreateBlog = () => {
+  const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -9,21 +12,15 @@ const CreateBlog = ({ setMessage, updateBlogs }) => {
   const handleCreateBlog = async (event) => {
     event.preventDefault();
     try {
-      await blogService.create({ title: title, author: author, url: url });
-      setMessage(`a new blog ${title} by ${author} is added!`);
-      updateBlogs();
+      dispatch(createBlog({ title: title, author: author, url: url }));
+      dispatch(
+        setNotification(`a new blog ${title} by ${author} is added!`, 3000)
+      );
       setTitle("");
       setAuthor("");
       setUrl("");
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
     } catch (exception) {
-      setMessage("ERROR Failed to post; try refreshing ");
-      console.log(exception);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      dispatch(setNotification("ERROR Failed to post; try refreshing ", 3000));
     }
   };
 
