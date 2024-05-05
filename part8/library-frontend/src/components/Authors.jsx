@@ -31,8 +31,6 @@ const Authors = ({ show }) => {
     label: author.name,
   }));
 
-  console.log(options);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
