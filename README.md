@@ -9,7 +9,7 @@ Hi, this is my GitHub repository for documenting and submitting my work for the 
 - Testing: Vitest, Jest, Playwright, Cypress
 - State Management: Redux, Context, React Query
 - Database: MongoDB
-- Others: Docker, ESLint, Fly.io, JWT, Webpack
+- Others: Docker, ESLint, Fly.io, JWT, Webpack, GraphQL
 
 ### Content covered for each part
 
@@ -21,3 +21,4 @@ Hi, this is my GitHub repository for documenting and submitting my work for the 
 - Part 5: Testing React apps
 - Part 6: Advanced State Management
 - Part 7: React router, custom hooks, styling app with CSS and webpack
+- Part 8: GraphQL
