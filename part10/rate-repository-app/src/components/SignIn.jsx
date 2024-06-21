@@ -36,22 +36,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const SignIn = () => {
+export const SignInContainer = ({ onSubmit }) => {
   const initialValues = {
     username: '',
     password: ''
-  };
-
-  const [signIn] = useSignIn();
-
-  const onSubmit = async (values) => {
-    const { username, password } = values;
-    try {
-      const result = await signIn({ username, password });
-      console.log(result);
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   const validationSchema = yup.object().shape({
@@ -101,6 +89,22 @@ const SignIn = () => {
       </Pressable>
     </View>
   );
+};
+
+const SignIn = () => {
+  const [signIn] = useSignIn();
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    try {
+      const result = await signIn({ username, password });
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  return <SignInContainer onSubmit={onSubmit} />;
 };
 
 export default SignIn;
