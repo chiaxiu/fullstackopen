@@ -1,35 +1,58 @@
 import { useQuery } from '@apollo/client';
 import { GET_REPOSITORIES } from '../graphql/queries';
 
-// const useRepositories = () => {
-//   const [repositories, setRepositories] = useState();
-//   const [loading, setLoading] = useState(false);
+const useRepositories = (selectedSort, searchKeyword, variables) => {
+  let orderBy, orderDirection;
 
-//   const fetchRepositories = async () => {
-//     setLoading(true);
+  switch (selectedSort) {
+    case 'highestRated':
+      orderBy = 'RATING_AVERAGE';
+      orderDirection = 'DESC';
+      break;
+    case 'lowestRated':
+      orderBy = 'RATING_AVERAGE';
+      orderDirection = 'ASC';
+      break;
+    case 'latest':
+    default:
+      orderBy = 'CREATED_AT';
+      orderDirection = 'DESC';
+      break;
+  }
 
-//     // Replace the IP address part with your own IP address!
-//     const response = await fetch('http://192.168.1.157:5000/api/repositories');
-//     const json = await response.json();
+  const { data, loading, refetch, fetchMore, ...result } = useQuery(
+    GET_REPOSITORIES,
+    {
+      variables: { ...variables, orderBy, orderDirection, searchKeyword },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
-//     setLoading(false);
-//     setRepositories(json);
-//   };
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
 
-//   useEffect(() => {
-//     fetchRepositories();
-//   }, []);
+    if (!canFetchMore) {
+      return;
+    }
 
-//   return { repositories, loading, refetch: fetchRepositories };
-// };
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+        orderBy,
+        orderDirection,
+        searchKeyword
+      }
+    });
+  };
 
-const useRepositories = () => {
-  const { data, loading, refetch } = useQuery(GET_REPOSITORIES, {
-    fetchPolicy: 'cache-and-network'
-  });
-  const repositories = data ? data.repositories : undefined;
-
-  return { repositories, loading, refetch };
+  return {
+    repositories: data?.repositories,
+    fetchMore: handleFetchMore,
+    loading,
+    refetch,
+    ...result
+  };
 };
 
 export default useRepositories;

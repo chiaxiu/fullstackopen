@@ -18,9 +18,13 @@ const ItemSeparator = () => <View style={styles.separator} />;
 
 const IndivRepoView = () => {
   const { id } = useParams();
-  const { data, loading, error } = useQuery(GET_REPOSITORY, {
-    variables: { id }
-  });
+  const { data, loading, error, refetch, fetchMore } = useQuery(
+    GET_REPOSITORY,
+    {
+      variables: { id, first: 4 },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
@@ -28,15 +32,31 @@ const IndivRepoView = () => {
   const repository = data.repository;
   const reviews = repository.reviews.edges.map((edge) => edge.node);
 
+  const onEndReached = () => {
+    if (!repository.reviews.pageInfo.hasNextPage) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        id,
+        first: 4,
+        after: repository.reviews.pageInfo.endCursor
+      }
+    });
+  };
+
   return (
     <FlatList
       data={reviews}
-      renderItem={({ item }) => <ReviewItem review={item} />}
+      renderItem={({ item }) => <ReviewItem review={item} refetch={refetch} />}
       keyExtractor={({ id }) => id}
       ListHeaderComponent={() => (
         <RepositoryItem item={repository} showGithubButton />
       )}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.5}
     />
   );
 };

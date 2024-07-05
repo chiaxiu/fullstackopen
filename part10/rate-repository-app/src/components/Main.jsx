@@ -5,6 +5,9 @@ import AppBar from './AppBar';
 import theme from '../theme';
 import SignIn from './SignIn';
 import IndivRepoView from './IndivRepoView';
+import ReviewForm from './ReviewForm';
+import SignUpForm from './SignUpForm';
+import MyReviews from './MyReviews';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,6 +25,9 @@ const Main = () => {
         <Route path='/' element={<RepositoryList />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/repository/:id' element={<IndivRepoView />} />
+        <Route path='/create-review' element={<ReviewForm />} />
+        <Route path='/sign-up' element={<SignUpForm />} />
+        <Route path='/my-reviews' element={<MyReviews />} />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </View>
