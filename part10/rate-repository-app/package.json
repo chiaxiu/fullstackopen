@@ -30,7 +30,7 @@
     "@react-native-picker/picker": "^2.7.7",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
-    "expo": "~50.0.17",
+    "expo": "^51.0.18",
     "expo-linking": "~6.2.2",
     "expo-status-bar": "~1.11.1",
     "formik": "^2.4.6",
