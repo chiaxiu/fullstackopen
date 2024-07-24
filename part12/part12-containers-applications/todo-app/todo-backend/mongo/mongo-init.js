@@ -4,9 +4,9 @@ db.createUser({
   roles: [
     {
       role: 'dbOwner',
-      db: 'the_database',
-    },
-  ],
+      db: 'the_database'
+    }
+  ]
 });
 
 db.createCollection('todos');
