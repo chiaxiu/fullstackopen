@@ -1,52 +1,27 @@
-require('dotenv').config();
-const { Sequelize, Model, DataTypes } = require('sequelize');
 const express = require('express');
 const app = express();
+require('express-async-errors');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+const { PORT } = require('./util/config');
+const { connectToDatabase } = require('./util/db');
 
-class Note extends Model {}
-Note.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    important: {
-      type: DataTypes.BOOLEAN
-    },
-    date: {
-      type: DataTypes.DATE
-    }
-  },
-  {
-    sequelize,
-    underscored: true,
-    timestamps: false,
-    modelName: 'note'
-  }
-);
+const blogsRouter = require('./controllers/blogs');
+const usersRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
+const authorsRouter = require('./controllers/authors');
 
-app.get('/api/notes', async (req, res) => {
-  const notes = await Note.findAll();
-  res.json(notes);
-});
+app.use(express.json());
 
-app.post('/api/notes', async (req, res) => {
-  try {
-    const note = await Note.create(req.body);
-    return res.json(note);
-  } catch (error) {
-    return res.status(400).json({ error });
-  }
-});
+app.use('/api/blogs', blogsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/authors', authorsRouter);
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const start = async () => {
+  await connectToDatabase();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+start();
