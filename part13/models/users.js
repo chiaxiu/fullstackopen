@@ -24,6 +24,11 @@ User.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    isDisabled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {

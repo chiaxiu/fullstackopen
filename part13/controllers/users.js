@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
-const { User, Blog } = require('../models');
+const { Op } = require('sequelize');
+const { User, Blog, Readinglist } = require('../models');
 
 router.get('/', async (req, res) => {
   const users = await User.findAll({
@@ -22,9 +23,41 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  const user = await User.findByPk(req.params.id);
+  const user = await User.findByPk(req.params.id, {
+    include: {
+      model: Blog
+    }
+  });
+
   if (user) {
-    res.json(user);
+    const blogIds = user.blogs.map((blog) => blog.id);
+    const blogs = await Blog.findAll({
+      where: { id: { [Op.in]: blogIds } }
+    });
+
+    const { read } = req.query;
+
+    const filteredBlogs = user.blogs.filter((blog) => {
+      if (read === undefined) return true;
+      return blog.readinglist.read.toString() === read;
+    });
+
+    res.json({
+      name: user.name,
+      username: user.username,
+      readings: filteredBlogs.map((blog) => ({
+        id: blog.id,
+        url: blog.url,
+        title: blog.title,
+        author: blog.author,
+        likes: blog.likes,
+        year: blog.year,
+        readinglists: filteredBlogs.map((blog) => ({
+          id: blog.readinglist.id,
+          read: blog.readinglist.read
+        }))
+      }))
+    });
   } else {
     res.status(404).end();
   }
