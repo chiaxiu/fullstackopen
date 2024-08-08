@@ -2,14 +2,14 @@
 
 Hi, this is my GitHub repository for documenting and submitting my work for the _Full Stack Open Course_ by _University of Helsinki_. Each folder contains the code for its respective part. Highly recommend for those who want to learn web development! Check out the course here: [Full Stack Open](https://fullstackopen.com/en/)
 
-### Skills learned so far
+### Skills acquired
 
-- Frontend: React.js, Vite.js, React Router, Bootstrap
+- Frontend: React.js, Vite.js, React Native, React Router, Bootstrap
 - Backend: Node.js, Express.js
 - Testing: Vitest, Jest, Playwright, Cypress
 - State Management: Redux, Context, React Query
-- Database: MongoDB
-- Others: Docker, ESLint, Fly.io, JWT, Webpack, GraphQL, TypeScript
+- Database: MongoDB, Postgres
+- Others: Docker, ESLint, Fly.io, JWT, Webpack, GraphQL, TypeScript, Github Actions
 
 ### Content covered for each part
 
@@ -23,3 +23,7 @@ Hi, this is my GitHub repository for documenting and submitting my work for the 
 - Part 7: React router, custom hooks, styling app with CSS and webpack
 - Part 8: GraphQL
 - Part 9: TypeScript
+- Part 10: React Native
+- Part 11: CI/CD
+- Part 12: Containers
+- Part 13: Using relational databases
